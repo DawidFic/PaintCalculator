@@ -8,6 +8,29 @@ public class Main {
         System.out.println("Enter number of Surfaces");
         return scanner.nextInt();
     }
+    protected static double calculate_obstruction_area()
+    {
+        System.out.println("Enter the number of obstructions");
+        int number_of_obstructions = scanner.nextInt();
+
+        double total_area = 0;
+
+        if(number_of_obstructions <= 0)
+        {
+            System.out.println("No obstructions");
+        }
+        else
+        {
+            for(int i = 0; i < number_of_obstructions; i++)
+            {
+                System.out.println("---OBSTRUCTION "+(i+1)+"---" );
+                total_area += calculate_single_area();
+            }
+        }
+
+        return total_area;
+    }
+
     protected static double calculate_single_area()
     {
         System.out.println("Enter length of surface");
@@ -44,7 +67,37 @@ public class Main {
     protected static void calc_total_cost(double number_of_cans_required, double cost_per_paint_can)
     {
         double total_cost = (number_of_cans_required*cost_per_paint_can);
-        System.out.println("Total cost of paint = "+(Math.round(total_cost)));
+        System.out.println("Total cost of paint = £"+(Math.ceil(total_cost)));
+    }
+
+    protected static int select_paint_can()
+    {
+        System.out.println("Select Paint");
+        System.out.println("1: White - £13.3 per can");
+        System.out.println("2: Red - £15.23 per can");
+        System.out.println("3: Green - £19 per can");
+        return scanner.nextInt();
+    }
+
+    protected static double get_paint_price(int choice)
+    {
+        double price;
+        switch (choice)
+        {
+            case 1:
+                price = 13.3;
+                break;
+            case 2:
+                price = 15.23;
+                break;
+            case 3:
+                price = 19;
+                break;
+            default:
+                price = 0;
+                System.out.println("Invalid Selection");
+        }
+        return price;
     }
 
     public static void main(String[] args)
@@ -55,15 +108,14 @@ public class Main {
 
         for(int i=0; i<no_of_surfaces; i++)
         {
-            area_of_surface.add(calculate_single_area());
+            System.out.println("---SURFACE "+(i+1)+"---");
+            area_of_surface.add(calculate_single_area()-calculate_obstruction_area());
         }
 
         System.out.println("Enter paint coverage (m^2)");
         double paint_coverage = scanner.nextFloat();
 
-        System.out.println("Enter cost per pain can");
-        double cost_per_paint_can = scanner.nextFloat();
 
-        calc_total_cost((calculate_number_of_paint_cans_required((calculate_total_area(area_of_surface)/paint_coverage))), cost_per_paint_can);
+        calc_total_cost((calculate_number_of_paint_cans_required((calculate_total_area(area_of_surface)/paint_coverage))), get_paint_price(select_paint_can()));
     }
 }
